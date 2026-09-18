@@ -1,0 +1,1 @@
+Exclude this deployment USB from UsbVault backups. Remove this file to back up this drive too.
