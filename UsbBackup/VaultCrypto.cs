@@ -9,7 +9,8 @@ namespace UsbVault {
         static readonly byte[] Magic = Encoding.ASCII.GetBytes("USBVLT01");
         // Unique to this deployment drive. This prevents another UsbVault kit on
         // the same Windows account from silently sharing its recovery key.
-        public const string KeyName = "UsbVault-Recovery-v1-b037d7326edb4b99a7503c93d73a4732";
+        // Re-keyed replica: fresh key identity, independent of the original kit.
+        public const string KeyName = "UsbVault-Recovery-v1-cf4a3d70dea84442a69b96060152bc70";
         static byte[] Random(int n) { var b = new byte[n]; using (var r = RandomNumberGenerator.Create()) r.GetBytes(b); return b; }
         static byte[] ReadExactly(Stream s, int n) {
             var b = new byte[n]; int p = 0, k;

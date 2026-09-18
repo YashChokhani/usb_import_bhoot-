@@ -12,6 +12,9 @@ separate, opt-in backup installation. It is deliberately **not in RunScripts**.
    this USB. Re-running on the original account verifies/reuses the same key;
    a kit containing another public key will not be silently re-keyed. This
    drive is assigned its own key name, separate from the original toolkit.
+   This replica was re-keyed: it ships with a fresh key identity and **no**
+   public key, so the first `SETUP_NEW_PC.cmd` run binds it to a new
+   recovery key on that PC. Backups from other kits cannot be restored here.
 2. For any additional farm PC, sign in to the non-admin account that will use the drives.
    Double-click **Tools\INSTALL_USB_BACKUP.cmd** and type that computer's displayed
    name. No credentials, elevation or downloaded software are required.

@@ -22,6 +22,11 @@ USB BACKUP
   This new drive starts without a key. On PC 2, run
   Tools\SETUP_NEW_PC.cmd. PC 2 keeps its private key, writes only its public
   key onto this USB, and then installs backup for that account.
+  RE-KEYED REPLICA: this kit was cloned with a brand-new key identity
+  (KeyName and drive token regenerated) and the previous public key was
+  removed. Its backups can ONLY be decrypted by the key created on the PC
+  where SETUP_NEW_PC.cmd / PREPARE_RECOVERY_KEY.cmd is run. Backups made by
+  the original kit are not readable with this kit's key, and vice versa.
   Keep the recovery Windows account/key intact. Losing it can make all
   backups unrecoverable.
   No admin is required. Background operation resumes after sign-in, not
