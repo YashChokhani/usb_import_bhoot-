@@ -1,0 +1,55 @@
+{
+    "hostname":  "DESKTOP-7U2MLVF",
+    "probed_at_utc":  "2026-09-14T04:09:57Z",
+    "os":  "Windows",
+    "distro":  "Microsoft Windows 11 Home Single Language",
+    "kernel":  "10.0.26200",
+    "arch":  "AMD64",
+    "uptime_seconds":  680,
+    "cpu":  {
+                "model":  "Intel(R) Core(TM) i7-10700 CPU @ 2.90GHz",
+                "cores":  16,
+                "hw_aes":  null,
+                "hw_crc32c":  null
+            },
+    "memory":  {
+                   "total_kb":  16548064,
+                   "available_kb":  10680604
+               },
+    "source":  {
+                   "path":  "D:\\",
+                   "exists":  true,
+                   "readable":  true,
+                   "total_bytes":  125264,
+                   "file_count":  45
+               },
+    "disk":  {
+                 "mount":  "D:\\",
+                 "fs_total_bytes":  123018215424,
+                 "fs_free_bytes":  123016151040,
+                 "read_speed":  "1.1 MB/s"
+             },
+    "network":  {
+                    "interface":  "Ethernet",
+                    "local_ip":  "172.18.20.16/24",
+                    "mtu":  1500,
+                    "link_mbps":  1000,
+                    "pi_reachable":  false,
+                    "pi_ping_ms":  null,
+                    "udp_wmem_max":  null,
+                    "udp_rmem_max":  null
+                },
+    "privileges":  {
+                       "user":  "DESKTOP-7U2MLVF\\projector4",
+                       "is_root":  false,
+                       "can_read_source":  true,
+                       "can_write_source":  true,
+                       "can_delete_source":  true
+                   },
+    "tools":  {
+                  "zstd":  false,
+                  "sha256sum":  false,
+                  "ss":  false,
+                  "ip":  false
+              }
+}

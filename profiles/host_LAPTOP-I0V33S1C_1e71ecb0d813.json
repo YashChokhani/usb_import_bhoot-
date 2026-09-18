@@ -1,0 +1,55 @@
+{
+    "hostname":  "LAPTOP-I0V33S1C",
+    "probed_at_utc":  "2026-09-13T18:30:41Z",
+    "os":  "Windows",
+    "distro":  "Microsoft Windows 11 Home Single Language",
+    "kernel":  "10.0.26200",
+    "arch":  "AMD64",
+    "uptime_seconds":  263757,
+    "cpu":  {
+                "model":  "Intel(R) Core(TM) Ultra 9 275HX",
+                "cores":  24,
+                "hw_aes":  null,
+                "hw_crc32c":  null
+            },
+    "memory":  {
+                   "total_kb":  32961912,
+                   "available_kb":  21762708
+               },
+    "source":  {
+                   "path":  "F:\\",
+                   "exists":  true,
+                   "readable":  true,
+                   "total_bytes":  107789,
+                   "file_count":  36
+               },
+    "disk":  {
+                 "mount":  "F:\\",
+                 "fs_total_bytes":  123018215424,
+                 "fs_free_bytes":  123016609792,
+                 "read_speed":  "2.1 MB/s"
+             },
+    "network":  {
+                    "interface":  "Wi-Fi",
+                    "local_ip":  "172.17.64.22/23",
+                    "mtu":  1500,
+                    "link_mbps":  780,
+                    "pi_reachable":  false,
+                    "pi_ping_ms":  null,
+                    "udp_wmem_max":  null,
+                    "udp_rmem_max":  null
+                },
+    "privileges":  {
+                       "user":  "LAPTOP-I0V33S1C\\Anantajit Mukherjee",
+                       "is_root":  false,
+                       "can_read_source":  true,
+                       "can_write_source":  true,
+                       "can_delete_source":  true
+                   },
+    "tools":  {
+                  "zstd":  false,
+                  "sha256sum":  false,
+                  "ss":  false,
+                  "ip":  false
+              }
+}

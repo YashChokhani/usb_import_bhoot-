@@ -1,0 +1,55 @@
+{
+    "hostname":  "DESKTOP-TPJ6E5Q",
+    "probed_at_utc":  "2026-09-15T11:20:52Z",
+    "os":  "Windows",
+    "distro":  "Microsoft Windows 11 Pro",
+    "kernel":  "10.0.26200",
+    "arch":  "AMD64",
+    "uptime_seconds":  464039,
+    "cpu":  {
+                "model":  "Intel(R) Core(TM) i5-14400",
+                "cores":  16,
+                "hw_aes":  null,
+                "hw_crc32c":  null
+            },
+    "memory":  {
+                   "total_kb":  16438836,
+                   "available_kb":  9513408
+               },
+    "source":  {
+                   "path":  "E:\\",
+                   "exists":  true,
+                   "readable":  true,
+                   "total_bytes":  35380188,
+                   "file_count":  53
+               },
+    "disk":  {
+                 "mount":  "E:\\",
+                 "fs_total_bytes":  123018215424,
+                 "fs_free_bytes":  122980564992,
+                 "read_speed":  "53.0 MB/s"
+             },
+    "network":  {
+                    "interface":  "Ethernet",
+                    "local_ip":  "172.18.5.110/24",
+                    "mtu":  1500,
+                    "link_mbps":  1000,
+                    "pi_reachable":  false,
+                    "pi_ping_ms":  null,
+                    "udp_wmem_max":  null,
+                    "udp_rmem_max":  null
+                },
+    "privileges":  {
+                       "user":  "DESKTOP-TPJ6E5Q\\Admin",
+                       "is_root":  false,
+                       "can_read_source":  true,
+                       "can_write_source":  true,
+                       "can_delete_source":  true
+                   },
+    "tools":  {
+                  "zstd":  false,
+                  "sha256sum":  false,
+                  "ss":  false,
+                  "ip":  false
+              }
+}

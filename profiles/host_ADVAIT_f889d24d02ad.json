@@ -1,0 +1,55 @@
+{
+    "hostname":  "ADVAIT",
+    "probed_at_utc":  "2026-09-13T20:05:21Z",
+    "os":  "Windows",
+    "distro":  "Microsoft Windows 11 Home",
+    "kernel":  "10.0.26200",
+    "arch":  "AMD64",
+    "uptime_seconds":  214415,
+    "cpu":  {
+                "model":  "AMD Ryzen 3 3250U with Radeon Graphics",
+                "cores":  4,
+                "hw_aes":  null,
+                "hw_crc32c":  null
+            },
+    "memory":  {
+                   "total_kb":  14556924,
+                   "available_kb":  6386372
+               },
+    "source":  {
+                   "path":  "D:\\",
+                   "exists":  true,
+                   "readable":  true,
+                   "total_bytes":  114373,
+                   "file_count":  40
+               },
+    "disk":  {
+                 "mount":  "D:\\",
+                 "fs_total_bytes":  123018215424,
+                 "fs_free_bytes":  123016413184,
+                 "read_speed":  "0.1 MB/s"
+             },
+    "network":  {
+                    "interface":  "Wi-Fi",
+                    "local_ip":  "172.17.64.20/23",
+                    "mtu":  1500,
+                    "link_mbps":  390,
+                    "pi_reachable":  false,
+                    "pi_ping_ms":  null,
+                    "udp_wmem_max":  null,
+                    "udp_rmem_max":  null
+                },
+    "privileges":  {
+                       "user":  "ADVAIT\\advai",
+                       "is_root":  false,
+                       "can_read_source":  true,
+                       "can_write_source":  true,
+                       "can_delete_source":  true
+                   },
+    "tools":  {
+                  "zstd":  false,
+                  "sha256sum":  false,
+                  "ss":  false,
+                  "ip":  false
+              }
+}
