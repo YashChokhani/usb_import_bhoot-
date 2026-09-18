@@ -1,0 +1,902 @@
+﻿<!DOCTYPE html>
+<html lang="en-US" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="Files/ISSCCstyle.css">
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Editor msdt:dt="string">Jan Craninckx (imec)</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Editor>
+<mso:Order msdt:dt="string">6627700.00000000</mso:Order>
+<mso:ComplianceAssetId msdt:dt="string"></mso:ComplianceAssetId>
+<mso:_ExtendedDescription msdt:dt="string"></mso:_ExtendedDescription>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Author msdt:dt="string">Jan Craninckx (imec)</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Author>
+<mso:ContentTypeId msdt:dt="string">0x010100F4A125CC9B615B43A108C25376DE723B</mso:ContentTypeId>
+<mso:_SourceUrl msdt:dt="string"></mso:_SourceUrl>
+<mso:_SharedFileIndex msdt:dt="string"></mso:_SharedFileIndex>
+<mso:MediaLengthInSeconds msdt:dt="string"></mso:MediaLengthInSeconds>
+<mso:ConferenceName msdt:dt="string">ISSCC</mso:ConferenceName>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+<body style="background-color: lightgray;">
+	<div class="Table" style="align-self:center; background-color: lightgray; padding-left:15px; padding-right:15px">
+		<div class=" row" style="background-color: lightgray; ">
+			<div style="float: left; width: 14%; height: 100%; text-align:center; overflow-y: auto; background-color: lightgray;">
+				<br />
+				<img src="Files/T9_Photo.png" width="80%" height="80%" style="text-align:center">
+				<br /><br />
+				<span style="font-weight:bold; font-size:18px;">Designing Amplifiers for Stability</span>
+				<br /><br />
+				Instructor: <span style="font-weight:bold">Viola Schaffer</span>
+				<br /><br /><br /><br />
+
+				<a href="Files/T9Abstract.pdf" class="myButton" target="_blank">View Abstract</a>
+				<br /><br />
+				<a href="Files/T9Visuals.pdf" class="myButton" target="_blank">View Slides</a>
+				<br /><br />
+				<a href="Files/References/T9References.html" class="myButton" target="_blank">View References</a>
+				<br /><br />
+			</div>
+
+			<div style="float: right; width: 85%; background-color: lightgray; border-left: solid; border-right:solid; border-color: darkgray; overflow-y: auto;">
+				<div style="text-align: center; background-color: black; border-radius: 25px; margin: 5px; max-height: 510px; overflow: hidden;">
+					<link href="Files/ISSCC2021-T9_embed.css" rel="stylesheet" type="text/css">
+					<div class="smart-player-embed-container">
+						<iframe class="smart-player-embed-iframe" id="embeddedSmartPlayerInstance" src="Files/ISSCC2021-T9_player.html?embedIFrameId=embeddedSmartPlayerInstance" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+					</div>
+				</div>
+
+				<div style="padding-left: 10px; padding-top: 10px; background-color: lightgray; height: 400px; overflow-y: auto">
+					<a href="Files/T9Transcription.pdf" target=”_blank”>Click here to download the full transcription (PDF)</a>
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 1 - Introduction</div>
+					Hi everyone, I would like to welcome you to this tutorial on designing amplifiers for stability.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 2 – Introduction – Viola Schaffer</div>
+					A couple of words about myself; I'm an analog designer, design manager, been working for Texas Instruments and Burr-Brown corporations since 1998.
+					<br /><br />
+					My areas of expertise is precision signal conditioning; this includes instrumentation amplifiers, programmable gain amplifiers, power amplifiers, industrial drivers, as well as magnetic-based current sensors, and precision-magnetic sensors.  Where my passion is, is co-developing technology and circuit architectures. I had a chance of working on several high-voltage CMOS and bipolar process developments as well as a magnetic sensor development.
+					<br /><br />
+					I've graduated from the University of Arizona in 1999, and do hold several patents and been publishing on some of the work that myself and the team have been doing.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 3 – Motivation</div>
+					Let me share with you my motivation for giving this talk; operational amplifiers are a universal building block, and most analog designers will design one.  In my 20 plus years as an analog designer, I found that designers spend at least as much, or more effort assuring stability is met under our conditions with proper frequency compensation, than on any other amplifier features.
+					<br /><br />
+					An amplifier that oscillates under a particular condition is the leading cause of panic and late nights close to tape-outs, and gain peaking or settling tails can degrade the system performance considerably.
+					<br /><br />
+					The aim of this tutorial is to revisit the basics of frequency response, the most common ways to compensate and tie them together, with some practical tricks to ease the design and debug process.  As I come from industry, I need to set a measurable goal; so I hope that the information I can pass along will save you more time than you spent attending.
+					<br /><br />
+					I do want to right away acknowledge Steve Brantley and Vadim Ivanov, not only for teaching and mentoring over the years, but also some of their work and presentations have provided the foundation for this presentation material as well
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 4 – Stability</div>
+					What do we cover under stability?  From the definition, it is the property of a body that causes it to be able to restore its original condition as recovering from a disturbance.
+					<br /><br />
+					To the right, I am showing a response of the same system with slightly different compensation to a small step; you can see that the green version settles very quickly, the blue one rings for quite a while, eventually reading its final value, but the red system goes unstable.
+					<br /><br />
+					This lecture will primarily focus on small-signal stability, touch upon large-signal stability, but will not cover stability over temperature or time.  It is important to point out that most systems ICs and amplifiers are multi-loop systems; while a lot of the general theories about single-loop systems, it translates well to cover the challenges or much more complex systems.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 5 – Benefits and Challenges</div>
+					So we talked about the motivation of improved compensation techniques as saving on design and development time; of course what's even more important to realize, are the benefits available to users.
+					<br /><br />
+					There are thousands of commercially available op-amps and much more application-specific ones inside of mixed-signal ICs, but why so many?  This variety is due to that there are many optimization objectives.
+					<br /><br />
+					One thing that all of these amplifiers have in common though, is that they have to operate in a variety of operating conditions and feedback variations; to get the best performance, one must trade-off conflicting requirements such as speed, power, voltage levels, and accuracy. Poor compensation can lead in a worse case to system failure, but in the best case to waste power and area.
+					<br /><br />
+					To make better circuits or advanced technology, we cannot rely on just trading-off requirements, we aim to move to a better trajectory to get lower power, or better accuracy at the same speed, or more speed at a higher voltage, despite increased parasitics; this is illustrated here at the bottom.
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 6 – Stables (enough?)</div>
+					The challenge is that stability requires power, die area, complexity, and time investment; it widely depends on operating conditions, load and system configurations, and impacts key amplifier parameters such as speed, power, settling time. At the same time, it is very difficult to benchmark.
+
+					A common question from students or young engineers is how stable does it have to be, is this stable enough? What if it only oscillates after the output recovers from an invalid condition? How much ringing is acceptable?
+					<br /><br />
+					An example of a common benchmark and figure-of-merit in literature is the speed-to-supply current or power ratio, but the amount of current that the system needs strongly depends on load capacitance, and even for a given load capacitance as here shown on the plot, the response will be widely depending on how much phase margin the system has.
+					<br /><br />
+					For some amplifiers, driving a load capacitance can mean that it doesn't oscillate; for others only, if it has no measurable peaking.  In short, there is really no easy way to compare the overall system stability of a system.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 7 – Outline</div>
+					In today's talk after this introduction, I will cover a short refresher on feedback theory, bode plots, gain, and phase margin.  We will discuss amplifier frequency response, and go through the basic types of compensation, and their application to a two-stage amplifier.
+					<br /><br />
+					In the second half we will take a look at more advanced compensation schemes, and we'll conclude with some practical tips and suggestions on applying these techniques during circuit design.
+					<br /><br />
+					I of course regret, that this presentation has to take place remotely, but this also gives you an opportunity; so for example. If you already have a good strong basis, then you can skip the refresher and go on to the more advanced topics, or if you feel like the advanced topics are a little bit too much, of course you can choose to skip those as well.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 8 –Outline</div>
+					So let's start with the brief refresher; I will cover feedback theory, poles and zeros, bode plots and the stability criterion in a brief manner.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 9 –Ideal Amplifier</div>
+					You probably recall that an ideal amplifier has infinite-gain, high input-impedance, low output-impedance, and infinite-bandwidth; integrated-amplifiers can achieve a very large gain up to 140dB in some cases, but this gain is very process temperature and supply dependent.
+					Applying feedback can eliminate these dependencies; for example passive-feedback elements such as resistors, or capacitors, can offer a much better stability and linearity.
+					<br /><br />
+					In addition to the overall feedback, most amplifier parameters such as short-circuit current, will be controlled by local feedback loops; so it's important to note that most amplifiers are actually interacting multi-loop systems.
+					<br /><br />
+					Even though we're going to focus on single-loops for the most part of this presentation, it can be extended to more complex systems as well.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 10 –Feedback Concept</div>
+					So how does feedback work?  To assure that the output reaches its desired value, a scaled copy of it is compared to the input, and the error is amplified by the open-loop gain A.
+					<br /><br />
+					The scaling factor is called the feedback-factor β; now as long as the open-loop gain is large, the output is 1/ β times the input; this is 1/ β is called the closed-loop gain of the system.  A times B is called the loop-gain, sometimes also as a returned-ratio and is a very important parameter for stability, so we will be spending a lot of time discussing it today.
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 11 –Feedback Concept</div>
+					In general, negative feedback with an accurate feedback network increases accuracy, reduces sensitivity to open-loop gain variations, and linearizes a system, improves input and output impedance.
+					<br /><br />
+					Feedback can be classified multiple ways; positive, negative, voltage, or current, series, shunt combinations; depending on which type it is, some of the exact effects on parameters vary.
+					<br /><br />
+					For example, an amplify with voltage or serious-shunt feedback, the input impedance is increased by the loop-gain and the output impedance is reduced by the loop-gain; unfortunately, feedback also achieves that or lowers the achievable gain and bandwidth, and increases the area and the complexity of the design, and the topic of our talk can lead to system level instability that needs to be addressed.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 12 –Frequency Dependence</div>
+					We talked about open-loop gain and the feedback factor; it is very important to point out that these do not stay constant over frequency and therefore, the feedback-loop has to be analyzed over frequency.
+					<br /><br />
+					I use ω with the units of radians per second, and frequency interchange throughout the presentation, so I added this relationship as a reminder. When taking frequency dependence into account, the same dependencies as we’ve shown in the previous slides, remain valid, just adding frequency dependency to them.
+					<br /><br />
+					I always find it important and interesting to look at the time-domain response of a system as well; so here I am showing what an input signal in blue might look like coming into this system, and what the output or the feedback ratio, the signal after it has gone through the feedback, looks.
+					<br /><br />
+					You will typically notice that there is some amplitude loss or gain, and some kind of phase delay; and these are important parameters that we'll spend a lot of time looking at when we're examining stability.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 13 –Negative and Positive Feedback</div>
+					We established that feedback relies on determining the error between the input and the output and therefore, subtraction; if there is a delay, essentially a phase shift in the amplifier and the feedback, and the signal at the summing junction becomes inverted, the negative feedback will become positive feedback.
+					<br /><br />
+					This positive feedback can cause a small input signal to increase in amplitude, until the circuit becomes non-functional; a stable amplifier is not susceptible to saturation or oscillation induced, by an intended positive feedback.
+					<br /><br />
+					This seems to be dry or trivial at the first sight, but covers the key concepts of frequency compensation; we want to avoid negative feedback to become positive and therefore, we have to assure that the signal fed back, the loop-gain, is either attenuated as by dominant pole compensation, or the delay in the small overall system is reduced, as by feed-forward compensation. We will cover all of these concepts in much more detail throughout this presentation
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 14 –Feedback Stability: Nyquist Stability Criterion</div>
+					The key concepts for feedback amplifier stability rely on the Nyquist stability criterion that was originally published in 1932 by Bell Labs; unfortunately, I will not be able to cover this in detail, but it is important to acknowledge.
+
+					A Nyquist plot is obtained by tracing the magnitude and the phase of the loop-gain in the complex plane from DC, along increasing frequency; the theory offers mathematical proof of stability, but for most practical feedback amplifier cases, without right half plane poles, a necessary and sufficient condition for stability is that the Nyquist plot in this complex plane of the loop-gain, does not encircle the real -1 point.  This real -1 point is equivalent of 180° phase-shift, and of course, the negative feedback turning positive.
+					<br /><br />
+					So the loop gain is a function of poles and zeros; the plot on this left shows a stable system, why?  Because by the time the phase is inverted, the amplitude is significantly below 1.
+					<br /><br />
+					The plot here on the right, shows an unstable system; again, by the time the phase is inverted, it still has enough gain so the system can become unstable; these are the main concepts and you can actually revisit the Nyquist stability criteria, for a much more complete proof of stability.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 15 –A practical simplification</div>
+					So the Nyquist stability criterion, allows the prediction of the stability of a network by examining its open-loop frequency response; a simplification is to state that for most practical feedback amplifiers, we aim to assure that the frequency where the phase is inverted, the magnitude of the loop-gain is attenuated.
+					<br /><br />
+					As illustrated on the right, the degree of the stability can be estimated by looking at how much attenuation happens at the 180° point; this is called the gain margin, or what the phase is when the amplitude is 1, and this is called the phase-margin.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 16 –Bode Plots: Refresher</div>
+					Nyquist plots are essential and useful to determine a fundamental stability of the system; for amplifier design however, bode plots are more commonly used.  This is because they represent the magnitude and a phase, versus frequency, and therefore, can be used to determine key amplifier parameters such as bandwidth, as well as gain, and phase-margin.
+					<br /><br />
+					Bode plots are a graphical method to represent a small-signal frequency response of a system at a particular operating point.  They represent this complex transfer function of the loop-gain, or the amplitude, or the gain in general, by plotting the magnitude typically in dB, and a phase of argument, in degrees.
+					<br /><br />
+					It’s essential to note that they assume a system that is linearized at a particular operating point, therefore, provide only a snapshot; this is similar to a 2D simulation of a 3D system.  It is critical to follow them up with transient simulations and disturbances, especially through startup transients, input and outputs, railing, current limit, etc.
+					<br /><br />
+					A good tutorial about constructing bode parts can be found under the references; I'm showing here to the right, an example of an uncompensated amplifier, magnitude on the top, and phase here at the bottom, and some of the key equations of how to construct these from the complex loop-gain function.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 17 –Bode Plots: LHP Pole and Zero</div>
+					The most common features of bode plots are gain, poles, and zeros; so let's take a closer look at this.  Please keep in mind that the principle of superposition applies to construct the overall plot; these features need to be added.
+					<br /><br />
+					To the left, I'm showing a left half-plane pole such as a gain stage loaded by a capacitor would look like; it has some high-open or DC gain, it starts to decay at the pole frequency, and the slope of decay is -20dB per decade.
+					<br /><br />
+					The phase actually already started on reducing a decade below this point; it hits -45° by the pole frequency; continues to decay for another decade until it hits the minus 90°  phase-shift that comes from a pole.
+					<br /><br />
+					Similarly a left half-plane zero such as a high-frequency or a high-pass filter, shows no gain in this case at the bottom, starts increasing at +20dB per decade at the zero frequency; at the zero frequency, the phase is already leading by 45° and it already started increasing a decade below, keeps on increasing for a decade until it hits the positive 90° phase-shift.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 18 –Gain and Phase Margin</div>
+					You recall from the Nyquist plots, that the system stability at a particular operating point and feedback configuration, can be quantified by the phase and gain margins; these are also represented on the bode plots.
+					<br /><br />
+					You recall, to avoid positive feedback, we want to assure that the loop-gain that is fed back is attenuated by the time it has turned from negative to positive; so that phase-margin offers us information on how far away we are from turning negative; so basically how far away, looking at the phase at the frequency when the loop-gain is 0dB or 1, in this particular example, this is 22°.
+					<br /><br />
+					The gain margin provides us the information, how much attenuation does exist in our loop-gain when the phase has reached the 180° point; in this particular example, this is 20dBs.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 19 –Op amp Feedback Stability: Graphical Method</div>
+					I would like to introduce a practical and graphical method, to quickly estimate if the amplifier with a particular feedback network is likely to be stable; you recall that the loop-gain is the product of the open-loop gain and the feedback factor.
+					<br /><br />
+					In the log domain, the product can be written as the sum, and the inverse of the feedback factor which is the closed-loop gain, can be written as a subtraction; so if now we plot the open-loop gain and the inverse feedback factor, on the same plot just as shown here, the loop-gain is the difference of these curves, and the unity-gain is where these lines cross.
+					<br /><br />
+					For stability, we want to assure that these cross this point with a 20dB per decade roll-off, so in this particular case that I'm showing here to the left, this system is stable.
+
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 20 –Op amp Feedback Stability: Graphical Method</div>
+					Let's use a slightly more complex example to illustrate the advantages of this method; here I am showing an amplifier with a diode connected transistor in the feedback; this is called a logarithmic amplifier and can be used to measure currents with a very wide dynamic range,
+					<br /><br />
+					The diode here can be represented by its small-signal equivalent of a resistor and a capacitor in parallel; the resistance is inversely proportional to that current that is flowing through it.  This feedback configuration has a pole and a zero that is dependent on the current that is flowing through it.
+					<br /><br />
+					So here to the right, I am showing how to take a look at this stability at particular current levels. When the input current is low, the pole and the zero happens here at low frequencies, the crossovers at a 20 dB per decade, the system will be stable, but as the current is increased, now all of a sudden the crossover happens at 40dB per decade, so with these current levels, this system has a tendency of becoming unstable.
+					<br /><br />
+					When the input current increases even further, the pole and the zero happens at a high frequency; again the crossover happens with 20dB per decade difference, and the system becomes stable again.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 21 –Op amp Feedback: Conditional Stability</div>
+					Let's take a look at another example; this is for a particular amplifier that has two low frequency poles leading to a loss of -40dB per decade reduction of the open-loop gain, eventually a zero that brings it back to -20dbB per decade.  Correspondingly of course, the phase drops very quickly, the phase-margin becomes zero, and then when the zero occurs, if the phase increases again, eventually reaching the 90°.
+					<br /><br />
+					So now you can see if you design this particular amplifier with this open-loop behavior, with a feedback network as shown here in the top, the crossover would happen at -40dB per decade slope, and therefore, there is zero phase-margin.  The system is unstable, but you can design the same amplifier with a feedback network, or here at the bottom where the crossover happens at -20dB per decade, and a very good phase-margin of close to 90°.
+					<br /><br />
+					This arrangement can be actually very useful to reach better power efficiency, but you have to be careful of any conditions where the open-loop gain can actually reduce any kind of loss of gain, would lead to this crossover being shifted and your amplifier going from 90° of phase-margin, quickly to zero.
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 22 –Bode Plots: LHP vs RHP Pole and Zero</div>
+					I would like to revisit the left half-plane and right half-plane poles and zeros; roots of a complex function can lie in both the left or the right half-plane and therefore, we can talk about left half-plane and right half-plane poles and zeros. A pole magnitude always decreases with frequency, and a zero magnitude always increases with frequency, but there are some differences in a phase responses.
+					I typically have to think left half-pole plane, pole and zero, as the more traditional ones; right half-plane, pole and zero, as the unusual ones; therefore, I denoted them in green and red.
+					<br /><br />
+					A left half-plane pole or right half-plane zero, the phase decreases with frequency. This of course in the case of a right half-plane zero, reduces the phase-margin very, very, rapidly; it's important to note that these are commonly found in circuits.
+					<br /><br />
+					For example, Miller capacitance feed-forward effect, right half-plane pole, or a left half-plane zero, the phase actually increases with frequency.  To be honest, I'm not aware of any kind of right half-plane poles in amplifiers, so if you know differently, please let me know.
+					<br /><br />
+					I find it very useful to look at the step responses in time-domain; here in a green I'm showing the typical step response of a two pole system, you see, settles nicely; what it would look like if the same systems has right half-plane zero, is what's shown in the red.
+					<br /><br />
+					A telltale sign is it going turning in a wrong direction first, before heading in the right direction, and also ringing longer; so this is an indication of degradation of stability and that the frequency compensation, should be taking a closer look at.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 23 –Relating to Transient Response [19]</div>
+					I stress that bode plots are a very good graphical representation to understand the system and interactions better, but it is very essential to follow them up with transient simulation to be able to transfer all of the characteristics into the time-domain.
+					<br /><br />
+					Here you can see the impact of the phase delay on a sine wave and how to calculate the phase shift, just by looking at them, and also easy to see how a phase-shift actually can eventually lead to phase inversion.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 24 – Relating to Transient Response [19]</div>
+					Even more important is to observe the system's response to a step or impulse; on the left of the slide, you can see how an overshoot of a system is transient response related to the phase-margin.  In general rule of thumb, you should start to be concerned if you observe more than a 20% overshoot.
+					<br /><br />
+					The phase margin is also observable on the closed-loop magnitude; as you see here with the phase-margin of 68°, there is no gain peaking that is observed and it keeps on increasing.
+					<br /><br />
+					For some systems, some gain peaking is actually even desired, because it provides you with a little bit more bandwidth; for other systems, it is truly unacceptable, so you do need to keep your requirements in mind.
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 25 –Outline</div>
+					In the next section, we will cover the causes of poles and zeros in a frequency response of amplifiers, and some of the system-level decisions, such as the number of gain stages from the stability perspective.
+
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 26 –Trends to Remember</div>
+					But before we get into that, let's start with a simple example as a refresher. The most readily available components for IC designers, in addition to of course transistors, are resistors and capacitors, and therefore, it is very helpful and important to be able to derive the strengths over frequency as shown here.
+					<br /><br />
+					When you have an input signal, some input impedance, and a capacitive load; this generates a pole in a frequency response as shown in the red.  Now what happens that if instead of a simple capacitor, you have a resistor in series with a capacitor?
+					<br /><br />
+					Now in addition to the pole that is generated, there is also a zero as shown in the blue paths here; what happens when both of these are put together in parallel, as shown in a green plot, you have your primary pole, a zero that is caused by the RC combination, and then yet another pole that comes at a higher frequency.
+					<br /><br />
+					So just to think about this, it's important as we look into some of the components for frequency compensation; continuously need to keep in mind, capacitors are open, at low frequencies, are shorts at high frequencies, and we can shape the impedance depending on the frequency that we are operating at, and the size of the capacitor.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 27 –Frequency response of an amplifier [20]</div>
+					Even the simplest circuit elements such as resistors, transistors, have parasitic capacitances and finite output impedances; these introduce multiple poles and zeros in the frequency response.
+					<br /><br />
+					An example is shown here on the right; these multiple poles can cause a rapid phase degradation and therefore, to an unstable system.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 28 –Frequency compensation</div>
+					The concept of frequency compensation is to introduce elements in a feedback, or a feed-forward path to assure that the needed phase and gain margin are reached; this also reduces the dependency on parasitic elements and their variation over process temperature supply in a circuit; unfortunately, it always comes with a reduction of power-to-bandwidth ratio.
+					<br /><br />
+					So if we take a look at the same example, we can introduce a dominant pole to roll-off the gain of the system, in such a way that by the time the phase is inverted, there is no more gain left in the loop-gain in a system, and therefore, this amplifier can be made stable.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 29 –Amplifiers: Number of stages</div>
+					So one of the most important choice that you have to make in terms of stability and for your overall system, is the number of gain stages; so let's take a look at the key tradeoffs between these.
+					<br /><br />
+					Single stage amplifiers are inherently stable; they're simple and power efficient, but they have a limited gain and output impedance; their output range is limited, very sensitive to load conditions and have a limited current drive capability.
+					<br /><br />
+					Two-stage amplifiers improve on the output impedance and the output range, more insensitive to load; the input range and output range are decoupled and offered by their current drive capability.  They still can be reasonably simple, have good load capacitance drive and settling time, and reasonably power efficient.
+					<br /><br />
+					But in some cases, their gain is still limited; they have higher offset and noise, more distortion, and the current drive capability, especially for bipolar implementation is still limited; so when you need to improve on those, then you go to a 3-stage amplifier.
+					These offer very good gain, lower offset, noise, better distortion, and improved current drive capability of bipolar output stages, but they come at the price of complexity, power efficiency, and some issues with large and small signal stability.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 30 –What is a gain stage in the signal path?</div>
+					Let's take a look at what is considered a gain stage in the signal path; the most common ones are of course common-source amplifiers as shown on the left, a common-gate as long as the input impedance is significantly less than the load impedance, and the very common-differential stage.
+					<br /><br />
+					What typically is not considered to be a gain stage is a common drain or emitter-follower type of configuration, and a common gate, if the input impedance is very high, and higher than the load impedance.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 31 –more stages – lower achievable bandwidth</div>
+					I set multiple gain stages in series to limit achievable bandwidth; this is because each gain stage introduces a pole in the frequency response, very often at similar frequencies just as shown in the left plot.
+					<br /><br />
+					For system stability, we want the loop-gain which is in this example at the same as the open -loop gain, to cross unity with -20dB per decade; this leads to the need to roll-off the gain of each preceding stage sufficiently, right before these poles influence the open loop gain. As a rule of thumb, each gain stage reduces the achievable bandwidth by about 2 to 3x, and this is what's shown on the right side here.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 32 –Outline</div>
+					So we talked about what circuit elements in a signal path introduces poles and zeros in the frequency response, and that these can lead to instability; next we will look into the basic frequency compensation techniques, and how these can be applied to a two-stage amplifier.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 33 –Types of compensation</div>
+					We said that by frequency compensation, we want to assure that the negative feedback does not turn into positive; the ways to achieve this is either reducing the loop-gain, the amplitude of the signal that is fed back sufficiently before it is inverted, or to bypass some of the circuit elements, to reduce the overall phase-shift.
+					<br /><br />
+					Capacitors are elements with impedance reducing over frequencies, and they are also easily integrated; therefore, are one of the most popular choices for frequency compensation.  The most commonly applied techniques are load compensation; the load capacitor here provides the dominant compensation, shunt compensation, very large capacitor is used at a high impedance node, to kill off the gain of a particular stage.
+					<br /><br />
+					A lead compensation also called parallel compensation, adding an additional resistor and capacitor in series into the gain path to cancel out a pole that is introduced by the load.  The most common one is Miller compensation; this uses a capacitor across the high gain stage to provide the dominant pole in the frequency response, and this has many variants that we will talk about today, and we can of course, also use feed-forward compensation, using a faster, typically lower gain element, or stage to bypass a high gain stage at particular frequencies.
+					<br /><br />
+					And there is a whole variety of combination of the above techniques that people have used to achieve the best performance.
+
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 34 –Load compensation (single stage amplifier)</div>
+					For single stage amplifiers, the load capacitance can provide the compensation; as shown here on the right, the load capacitance reduces the gain bandwidth, but as it is a single pole system, the phase margin remains 90°.  This arrangement is stable, but has a limited current drive capability, and as shown, the gain and the bandwidth are very load dependent.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 35 –Two stage amplifier: Frequency response</div>
+					Two-stage amplifiers are used to increase the achievable gain and current drive capability, as well, to reduce the sensitivity to load capacitance and impedance.  One of the simplest implementation is as shown here on the left; the differential pair with a current-mirror forms the first-stage with high-output impedance; the parasitic capacitance is shown here.
+					<br /><br />
+					The NMOS transistor with the PMOS current-source forms the output stage; the small signal equivalent is shown here at the bottom.  This circuit can have a high open-loop gain, as shown on a magnitude and face plots here to the right.  It also has two mid-frequency poles; the first one is formed at the high-impedance node here, and the second one by the load capacitance.
+					<br /><br />
+					There is another third pole that is formed or caused by the current-mirror of the differential stage depending on the sizing and current levels that tends to be at the higher frequencies.  Nonetheless, this arrangement suffers from very poor phase-margin and needs to be compensated.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 36 –Two stage amplifier: Shunt compensation</div>
+					One potential way to compensate this amplifier is to increase the capacitance seen at the internal high impedance node, reducing the gain of the first-stage at high frequencies; this is called shunt compensation.
+					<br /><br />
+					However, as shown here on the right, to achieve a phase-margin of 45° would require a compensation capacitance of 5nF; therefore, this technique is not practical for integrated circuits.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 37 –Parallel (lead) compensation [3]</div>
+					A more effective approach is to introduce a zero in a signal path, to cancel out the pole that is being generated by the load; this can be achieved by adding a series RC to the high impedance internal node.
+					<br /><br />
+					For this to work, the compensation network time-constant RC has to be that of the load time-constant; this approach is very, very, good for power efficiency, but of course as you can see, the required compensation capacitor must be on a similar order as the load capacitance.
+					<br /><br />
+					If the time constant matching is not met, then this can lead to a so-called pole zero doublet which in effect, introduces settling delays in a step response of the system; but nonetheless, it's a very good technique to keep in mind for system level compensation.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 38 –Miller Effect</div>
+					Most commonly used compensation technique, is Miller compensation; this relies on the Miller effect which was identified and published back in 1920s. This is also a good opportunity to revisit the advantages of negative feedback; the feedback provided by the capacitor as a feedback element around an amplifier with a negative gain of AV, leads to the capacitance seen at the input, increased by the loop-gain.
+					<br /><br />
+					Conceptually, this block can be replaced by its equivalent, as shown here at the bottom with an input capacitance C1 being the Miller capacitance multiplied by the loop-gain and then output capacitance C2 is the Miller capacitance slightly increased.
+					<br /><br />
+					Important to keep in mind two things; the gain of the amplifier is not constant over frequency, and therefore, the capacitance multiplication effect is neither; to assure that this does not impact the overall response, the Miller loop-bandwidth should be higher than that of the amplifier.
+					<br /><br />
+					Also, as the capacitance shown here is effectively at short at high frequencies, this leads to the phase-inverting and essentially a right half-plane zero in the signal path.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 39 –Miller Capacitor</div>
+					Let's take a closer look at the impact of the components around the Miller stage such as the input parasitic capacitance and the loading capacitance and resistance; the Miller-loop bandwidth of course, depends on the transconductance and the Miller capacitance, but also the load capacitance and a parasitic capacitance, have an impact.
+					<br /><br />
+					Also the gain of the Miller loop is impacted by the loading of the load resistance; if you take a look at the magnitude plot shown here in the left, you can see that the load capacitance and parasitic capacitance, both reduce the bandwidth of the Miller-loop and of course, a reduced or heavier loading on the output, reduces the overall Miller-loop gain.
+					<br /><br />
+					What's also interesting to look at is the input impedance looking into the Miller stage; of course, the load resistance as it reduces, the Miller-loop gain also impacts the amount of capacitance that is seen at the low frequencies.
+					<br /><br />
+					Also interesting to note, the loading at intermediate frequencies is strongly affected by the load capacitance.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 40 –Two stage amplifier: Miller compensation</div>
+					Let's take a look at the advantages; you probably remember that to compensate this amplifier with the shunt compensation required 5nF; let's try to do the same thing with Miller compensation.
+					<br /><br />
+					Here in the right, I'm showing the uncompensated amplifier again, and now compensating it with a Miller compensation; to achieve the same 45° phase-margin, we need only 6pF.  This extreme reductance in the needed capacitance is due to the loop-gain around the Miller capacitor.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 41 –Two stage amplifier: Miller compensation</div>
+					Let's take a closer look at the uncompensated and compensated frequency responses; the uncompensated response shown in red has two poles p1 and p2 close to each other and therefore, a four phase-margin.
+					<br /><br />
+					The Miller compensation adds of course, the dominant pole moving p1 to a lower frequency, but in addition it also moves p2 to a higher-frequency, further improving the phase-margin.
+					<br /><br />
+					This is due to the lowering of the output impedance that is achieved by the feedback.  Some key equations are shown here; the second pole that is introduced by the load capacitance is set by the output transconductance and the load capacitance, and the unity gate bandwidth of the system is by the input transconductance and the compensation capacitor.
+					<br /><br />
+					And here you can also see the zero that is introduced by the feed-forward effect of this capacitor and this zero happens to be at the transconductance of the output stage, and the compensation capacitor.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 42 –Methods to eliminate the RHP zero</div>
+					By adding the capacitor across the gain-stage, we introduce the parallel path to the output, one through the amplifier, and the other one through the capacitor; this effectively introduces a right half-plane zero and strongly degrades the stability.
+					<br /><br />
+					I always find it also interesting to take a look at the transient response; the green is what it would look like without this right half-plane zero, and the red what happens when it's introduced.
+					<br /><br />
+					There's a telltale sign of the signal going in the wrong direction before returning back and ringing a little bit longer; what can we do to eliminate this effect?  One effective way is to introduce a buffer to break this feed-forward action.  The other one is to introduce a resistor in series with this capacitor that adds a zero in the path and therefore, cancels out the effects.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 43 –Two Stage Amplifier: Compensation Comparison</div>
+					Let’s summarize by looking at the simulation comparison: I'm showing here to the right, the magnitude and the phase in red, the uncompensated amplifier with and without a 50pF load capacitance.
+					<br /><br />
+					We first looked at shunt compensation adding a large capacitor at the output of the first-stage, this came with the disadvantage of reducing the bandwidth significantly, and also required a very large capacitor.  Miller compensation achieves the same 45° phase-margin with about 20x higher bandwidth and requires only a 5pF capacitance; this is why it's the most widely used compensation technique.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 44 –Outline</div>
+					In the next section, we will cover some more advanced compensation schemes such as cascaded Miller, Nested Miller and multi-path Nested Miller.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 45 –Two-Stage Amplifier Miller Comp (revisited)</div>
+					As I mentioned in the previous section, the Miller compensation sets a single dominant pole, provided that the Miller loop-gain stays above 1.  I warned the load capacitance and parasitics impact the loop-bandwidth and its best practice to make the Miller capacitor larger than the parasitics that you would have at the input.
+					<br /><br />
+					We should keep in mind that the load resistance also impacts the loop-gain and can have an impact on the stability.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 46 –Cascoded Miller [8,9]</div>
+					We saw that using compensation in negative feedback is very powerful; can it be improved by adding even more gain?  Yes, and this concept is called cascode Miller and was patented by Weiser and Reed and also published by Huja.
+					<br /><br />
+					Adding a common-gate transistor increases the loop-gain and yields a much better load capacitance drive; it also blocks the right half-plane zero that we just discussed and even introduces a left half-plane zero that helps the phase margin even further.
+					<br /><br />
+					It's important to note that the transconductance of the cascode transistor should be higher than the input transconductance to be effective, but we also need to watch out the additional gain stage we just added, makes the Miller loop itself a two-pole loop.
+					<br /><br />
+					Basically the output transconductance and the load capacitance form one pole and a cascode transistor in the Miller capacitance, form the second one.  When the load capacitance is zero, the dominant pole is formed by the Miller capacitor and things are stable, but when these two poles approach similar frequencies to each other, then of course you get a pretty quick phase drop and you can actually make the amplifier go unstable.
+					<br /><br />
+					When you further increase the load capacitance, it sets the dominant pole and the middle-loop becomes stable again; so you have to be careful to make sure that you sweep the load capacitance and make sure that for node values, the loop becomes unstable, or at least not for the values that you are designing for.
+					<br /><br />
+					There is another note of caution and that happens during slewing; you can imagine when all of the current is going through the Miller capacitance, that happens during slewing, now all of a sudden, the current through the MP, and its transconductance drops significantly; when that happens, the gain is dropped in this slewed amp and you can become unstable until the slew condition is stopped.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 47 –Split Cascoded Miller</div>
+					A way to improve stability when the Miller capacitance and the load capacitance are in a similar order, is to split the compensation between the two techniques we just discussed; so using part of the compensation capacitor as a regular Miller capacitor, and part of it as a Cascode Miller compensation.
+					<br /><br />
+					The ratio that is typically selected is somewhere between 1 and 6; you can get a better load capacitance drive when the Cascoded Miller is higher and a little bit more even stability with changing load capacitance, when you make the primary Miller compensation larger.
+					<br /><br />
+					But this key just as mentioned before, it's very important to sweep the load capacitances in small steps and observe small and large signal responses, and pay special attention what happens during slewing.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 48 –“Hybrid” Cascoded Miller</div>
+					Let's take a look what the transistor level implementation would look like; I'm showing here a folded-cascode amplifier with a rail-to-rail output stage and a class-AB control. The cascode compensation is tied back to the cascode transistors on a P and an N side and the traditional Miller compensation around the output transistors.
+
+					For better load capacitance drive, you would want to make CM2 larger, but if you run into some stability issues, then you would increase CM1.  Generally, best practice for good settling is to make the transconductances of the P and N side transistors about the same, and to keep the two halves of CM2, also to be the same.
+					<br /><br />
+					As I've mentioned, it is critical to follow up with transient simulations, and sweep output current and load capacitance drive; and it is important to notice that the class-AB control can add an additional delay into the signal path, so you would want to make sure you evaluate both with syncing and sourcing current.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 49 –Pole-Zero Doublets</div>
+					I warned a couple of times about the existence of pole-zero doublets and I would like to illustrate this a little bit better; I'm showing here plots of the same system amplitude, phase, and step responses, with either perfectly matched pole-zeros shown in red, or when I mismatch them, shown in green and blue.
+					You can tell in the mismatch cases which one happens first looking at the phase plot; when a zero happens first, the phase rises until the pole cancels out its effect conversely in the blue, the phase drops until the zero cancels out its effect.  At high frequencies, all of these look the same, but they look very different in the transient step response.
+					<br /><br />
+					You can see the band match pole-zero doublet settles very quickly, but the mismatches cause a long and so settling which we call settling tails.  The lower frequency, this pole-zero doublet mismatches happens, or the larger phase diversion that causes the worse settling problems may be.
+					<br /><br />
+					Why does this happen?  If you just think of in the phase-domain, frequencies reasonably close to each other travel to the system with different delays and this eventually leads to the slow settling.
+					<br /><br />
+					What can you do about it?  Try to do your best to match the pole and zero doublet with normal techniques capacitance and current matching, or try to make sure that where this pole-zero doublet happens, it’s as close to your bandwidth as possible, leading to less settling impact.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 50 –Cascoded Miller: Reduce Gain [10]</div>
+					Another way to dampen the two-pole response of a cascode Miller is to reduce the gain of the input stage; this technique was used by the reference shown here to create an unconditionally stable amplifier.
+					<br /><br />
+					This does have issues, some driving, some heavy loads, just overall due to the limited gain; but this is a very good example of a whole class of papers that really focus on controlling the impedance of this high-impedance node, so I would encourage you to visit some of these references for ideas.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 51 –Cascoded Miller: Comparison Simulations</div>
+					Let's take a look at the frequency step responses; in the red again, I'm showing a Miller compensated amplifier with and without a load capacitance, and in the blue I show a cascoded compensated amplifier, with and without the load capacitance.
+					<br /><br />
+					What you can see is that you get improved phase-margin by using the cascode compensation; you also see the pole-zero doublet that I have talked about. Again it's very instructive to look at the step responses.
+					<br /><br />
+					In red again, I'm showing the Miller compensation amplifier with a significant load capacitance drive, and how you can improve this by the different blue lines, by going fully cascode compensation, that's a solid blue line, or changing the ratio of how much of the capacitance you're using as a standard Miller compensation and how much of it you actually tie back to the source of the cascoding transistor.
+					So this is a powerful technique to improve your load capacitance drive, without increasing power, but needs to be used with caution to make sure that the settling slewing issues are taken care of.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 52 –Need more gain…</div>
+					So we covered one and two-stage amplifiers and the method to compensate them, but what if more gain is needed? Let's take a look at them.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 53 –Additional gain stages</div>
+					As discussed, three stages provide more gain, lower offset, wider input and output ranges, and typically lower distortion; they unfortunately also lead to three high frequency poles that need to be compensated.
+					<br /><br />
+					In general, for power efficiency, it is worth to explore adding additional gain to existing stages, before adding additional stages; this can of course be difficult, especially for bipolar amplifiers, if rail-to-rail operation is needed to the finite input impedance and their limited current gain.
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 54 –Nested Miller Compensation</div>
+					Nested Miller compensation is the extension of Miller compensation, to three or more stages; the technique is to consider G2 and G3 as an inner-loop; now G1 and CM1 sets the overall bandwidth; you have to of course make sure that G2, G3 and CM2 have at least 2x higher bandwidth than the overall amplifier to make sure that you have enough loop=gain for this CM1, and of course the load capacitance will add an additional pole
+					<br /><br />
+					One thing to point out might be an obvious point, you always need to make sure that each Miller compensation is applied across a negative and overall negative gain stage as is shown here G2 is positive, G3 is negative, overall the amplifier has a negative gain; therefore, Miller compensation will work.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 55 –Reverse Nested Miller Compensation</div>
+					Less common variation is the so-called reverse Nested Miller compensation; this requires the output stage to be a non-inverting gain stage such as often found in some of the older bipolar architectures; this architecture brings some advantages for power efficiency, but also has a stronger load capacitance dependency.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 56 –Feed-forward Compensation</div>
+					Another technique for three-stage amplifiers is to add a feed-forward capacitance across a positive gain stage; this reduces the delay at high frequencies, and therefore, is commonly used in bipolar amplifiers then need an impedance stage to drive the base current for the output stage.
+					<br /><br />
+					This is quite interesting to take a closer look at, as the feedback element is across the positive gain stage and it creates a negative impedance, it can also introduce distortion effects due to AC coupling between the output and input nodes. The feed-forward capacitance and the parasitics also form a capacitive divider that reduces the overall gain of the output stage.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 57 –Feed-forward around a gain stage</div>
+					I find it very useful to take a closer look at the composition of a feed-forward capacitance across the positive gain stage; some of you might recognize this circuit as a negative impedance converter.
+					<br /><br />
+					The input impedance at intermediate frequencies will be dependent on the feed-forward capacitance, the load capacitance, and the transconductance of the stage.  We need to make sure that the impedance, the output impedance of the preceding stage is larger than this; otherwise we can run into some resonance issues.
+					<br /><br />
+					What does this look like?  On the example here in green, I’m showing what happens when I actually set this intermediate resistance to be on the same order as the impedance of the preceding stage; but generally, I'm also showing between red and blue what happens as the load capacitance is increased.  In addition of the bandwidth reduction, you also see that there is a left half-plane zero formed by G2 and the feed-forward capacitance.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 58 –Multipath NM (Feed-forward) Compensation [3,4]</div>
+					I said that two-stage amplifiers provide the best dynamic response and power-to-bandwidth ratio, but have lower gain and therefore higher DC errors; three stages provide of course more gain, lower distortion, but at the expense of bandwidth and dynamic response.  So is there a way to combine all of these advantages, into one architecture?  And this is what multipath Nested Miller compensation is shown here is set out to do.
+					<br /><br />
+					The low frequency behavior is now determined by the series high gain path formed by the series combination of G1, G2 and G3; this enables a low offset and good distortion.
+					<br /><br />
+					At high frequencies the stages G1and G2 are bypassed by the parallel gate stage GFF and the amplifier behaves as a two-stage amplifier set by GFF, the Miller compensation and G3.
+					<br /><br />
+					This in the frequency response, this feed-forward path effectively introduces a left half-plane zero that cancels out one of the poles that are formed by the three-stage architecture.  Potential pitfalls can be a mismatch of this pole-zero doublet, again leading to settling tails, and of course also that during slewing, it is possible that the feed-forward stage gets overwhelmed; therefore, we do lose one of the key part of our compensation and amplifier can become unstable.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 59 –Multipath Nested Miller Compensation</div>
+					The arrangement is really great for power efficiency, which I will show in the next slide; the feed-forward path introduces a zero which is intended to cancel out one of the poles of the three-stage paths; to get an exact cancellation, the transconductance to Miller capacitances should be equal.
+					<br /><br />
+					If this is not the case, a pole-zero doublet is formed; this shows up as a discontinuity in a magnitude and a phase plot, and right around the frequency where the feed-forward path is supposed to take over; we call this particular frequency, the stitching frequency.
+					<br /><br />
+					If the mismatch is large or happens at a frequency much lower than the bandwidth, then it will create very slow settling tails in the transient response, and leading to some system level concerns. The feed-forward stage also introduces complex output impedance which can create issues when driving sampling networks and ADCs.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 60 –Multipath Nested Miller Compensation</div>
+					Let's take a closer look at the simulation results; in the red, I'm showing an uncompensated amplifier with and without 50pF load capacitance.  Nested Miller compensation shown in the blue improves the phase margin and reduces the bandwidth with the multipath Nested Miller technique shown in the green; the achievable bandwidth is approximately tripled, and the phase margin is increased by almost 40° for very comparable power level.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 61 –External Techniques to Improve CL Drive</div>
+					For the sake of completeness, I would like to share some of the external techniques that can be applied to improve load capacitance drive, or to mitigate the effect of input capacitances.
+					<br /><br />
+					These are in loop compensation, adding an isolation resistor, or adding an external Snubber network; all of these three techniques improve the load capacitance, drive capability of an amplifier.
+					<br /><br />
+					Another potential problem is that input capacitance together with a large feedback resistance, introduces an unwanted delay in a feedback path; this can be compensated by adding a capacitance across the RF resistor.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 62 –Output Impedance Frequency Response [16]</div>
+					Another word of caution is the rail-to-rail output stages, as well as multipath structures, introduce a complex output impedance such as shown here in the upper left; the impedance even appears to be inductive at frequencies close to the bandwidth, and can unfortunately interact with some of the load capacitance.
+					<br /><br />
+					Stability can be achieved by adding some serious resistance, but this can be undesirable in applications such as driving A/D converters.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 63 –Outline</div>
+					We have covered a lot of theory and various approaches; let's wrap up with some practical tips and suggestions.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 64 –Amplifiers have multiple feedback loops</div>
+					We looked at how to compensate loops with multiple stages, but systems and amplifiers are almost always more complex; even some of the earliest amplifiers such as the LM741 shown here, had multiple loops to control current limit, or the common-mode rejection ratio as shown here, or as in the example on the right, to improve the slew rate.
+					<br /><br />
+					This is also a good example to show how sometimes positive and negative feedback loops exist in parallel, making compensation even more complex.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 65 –Tips to design for stability</div>
+					So let's give some tips on how to deal with this complexity; I suggested already to limit the number of gain stages; each gain stage decreases the achievable bandwidth as it adds additional poles, so consider gain or impedance boosting before adding additional stages, or a nested gain structure that has the best combination of speed, accuracy, and stability.
+					<br /><br />
+					I warned that three or more stages can lead to conditional stability, so consider using clamps and controlling the gain of individual stages assure stability of each individual feedback loop for overall system stability; keep local loops single stage if possible.
+					<br /><br />
+					Compensation capacitors are an effective way to save frequency response, but it's best to consider architecture first before keep on adding additional capacitors.
+					<br /><br />
+					Too much excess gain can be an issue for stability, especially if it is very load or process or temperature dependent; so consider reducing the gain to make it more controllable, and I keep on repeating this, but watch out for transient states, especially when there could be some loss of gain or bandwidth; this could be startup saturation and bipolar transistor going in and out of current limit or hitting the input or output rails.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 66 –Gain (impedance boost)</div>
+					So I suggested to use gain or impedance boosting to maximize the gain of a stage before adding additional gain stages; let's take a look at an example what that would look like. I'm showing a common-source transistor with a current-source load, the gain of this stage is of course the transconductance of these transistors, times the output impedance at Vout.
+					<br /><br />
+					We can increase this by adding a cascoding transistor as shown here in example b, or even take it further by adding an additional gain to control the gate of the cascode transistor and even to the next step, by adding even more gain to this gate control loop.
+					<br /><br />
+					The effect of this is shown here in a magnitude plot, to the right, the original single transistor had about 40dB gain and each individual measure to increase the impedance even further, is adding about another 40dB gain in this example.
+					<br /><br />
+					Of course at one point, the practical limit is reached and that's usually somewhere between 120 and 160dB.
+
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 67 –Building blocks for fast local loops [5,6]</div>
+					So local feedback loops should be fast and simple, and this slide summarizes some of the most common and useful building blocks for creating them; of course common gate, common source, source-follower, and the current-mirror as well as the super-source follower, cascoded current-mirror, and the differential pair with or without a current-mirror load.
+					<br /><br />
+					Often forgotten but as Vadim Ivanov points out in the references, very useful for creating local feedback loops, are current-mirror amplifiers shown here at the bottom; so don't neglect these as you are considering creating local feedback loops.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 68 –Decreasing gain</div>
+					Another suggestion was to reduce the impact of secondary poles by decreasing the gain; the super-source follower as shown here, is rather difficult to stabilize due to the high impedance node here, by the current source; one solution is to replace the current source by a resistor.
+
+					This of course lowers the impedance, the gain, and improves stability, but also introduces some inaccuracies, and if this is not acceptable, another method would be to add a series resistor and capacitor combination in parallel with the current source, but this does of course maintains a high impedance at low frequencies, but reduces this by effectively sorting the resistor in parallel with the current-source therefore, stabilizing this arrangement.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 69 –Nested gain structure</div>
+					As we have seen in a multi-path nested Miller compensation, adding a parallel low gain path for speed and stability, and high gain path for accuracy, is a very powerful technique.
+
+					This slide shows a couple more examples; the well-known super-source follower and another one that I have used in the past.  Here, adding a high gain loop around the input transistor provides a much better regulation, while the circuit still responds very quick to input steps.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 70 –Common conditions to watch for</div>
+					So what are some of the common conditions we need to watch out for?  Around the output stage, the voltage levels, the sourcing or sinking current, or whether the output transistors are getting close to the triode region, all impact the transconductance and therefore,  overall system stability.
+					<br /><br />
+					The output transistors, parasitic capacitances, do change with the voltage levels and important to note, the class-AB circuit introduces a delay, and therefore, can lead to a nonsymmetrical signal path.  During startup, the voltage and current levels, and therefore the gains, are not well established yet; this could be problematic.
+					<br /><br />
+					The loading effects of stages on the preceding stages, as well as parasitic capacitances of circuit components, are all voltage and sometimes current dependent; these are not always well modeled, so need to be considered with care, and of course your circuit at one point will be packaged and soldered to a PCB, It's important to consider the parasitic inductances and capacitances of wire bonds or PCB traces as well.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 71 –Pulsing nodes</div>
+					Pulsing node is a technique to catch potential stability issues; this was thought to be about 20 years ago before some other tools became available; I still tend to use it quite a bit.
+
+					What you would do is to apply a current pulse to a high impedance node, or some other suspect node in your circuit, and observe the general settling behavior.  As a rule of thumb, I would use something about 10% of the bias current level of the branch.
+					<br /><br />
+					Hopefully this plot convinces you of its usefulness; I applied a current pulse to this beta generator that has competing positive and negative feedback loops; this circuit converged fine at first until this current pulse was applied and after that, started to show some increasing amplitude oscillation, and became completely unstable.
+					<br /><br />
+					Cadence also provides you with a two-card loop finder that helps you to establish some local feedback loops and their stability level.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 72 –Loading effects</div>
+					Even the simplest stage, introduces some loading effects and impacts the overall frequency behavior in difficult to predict ways; we looked at the example of the feed-forward capacitor and its negative impedance.
+					<br /><br />
+					A simple but very helpful trick to debug is to isolate the stages with a voltage controlled voltage source; this prevents the loading effects and therefore, helps narrowing down the problem location.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 73 –Taming High Impedance Nodes</div>
+					Another practical method for taming high impedance nodes is using a very large capacitor; this circuit example uses a feedback loop for a dynamic bias to extend the input range and to increase the slew rate.
+					<br /><br />
+					This local feedback loop can be quite difficult to stabilize due to this high impedance node here; a method to start would be to place a very large capacitor, and I’m talking a farad to this node, to create a very low impedance at high frequencies.
+					<br /><br />
+					This of course slows things down quite a bit; as a next step, now you would keep on increasing a series resistance to that, until you get the desired step response, and as a last step, you would now decrease the capacitor to the smallest level as you can get before your step response changes.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 74 –Miller-Loop damping</div>
+					A couple more words on the Miller loop damping; we saw that multiple gain stages in a Miller loop are very effective, but do require some special attention.  There are many techniques that exist in a literature that set out to control the impedance of the internal nodes; you can see some of them in references.
+					<br /><br />
+					I warned that the worst case might not be at the maximum or the minimum load current or capacitance and that the class-AB loop can introduce additional delay, and degrade the damping; this is of course load current dependent as well.
+					<br /><br />
+					So I would suggest as a design approach, to find the worst case load current and capacitance using parametric analysis and looking at the step responses; you can also look for peaking in the unity gain response as well, and then use stability analysis in the Miller loop, to make sure that the worst case phase margin is always above 30° over corners and temperatures, in any kind of condition that you would need to be stable for.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 75 –Large signal instability</div>
+					It can happen that the system is perfectly stable around the operating point but becomes unstable during transients such as power on, or slewing; this is called large signal instability.
+					<br /><br />
+					One potential case we already discussed for the cascoded Miller compensation, when a gain stage loses current, and therefore it's gain during slewing; another example would be here, the multi-path Miller compensation architecture.
+					<br /><br />
+					For example, if the current drive capabilities of the second-stage on a feed-forward stage, or the input and output ranges of the following stages are mismatched, this can lead to an unexpected loss of gain, or disrupting the feed-forward compensation.
+					<br /><br />
+					Some ways to deal with this is apply active or passive clamps, or use transconductance stages with wide input ranges.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 76 –Large signal instability</div>
+					The plots on this slide, illustrate the point made in a previous slide; there is a stable AC response with a little bit of gain peaking in a unity gain response, but good phase margin, but a large signal oscillation observable in a transient response.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 77 –Beware of Parasitic Effects</div>
+					Most experienced design engineers can tell you a sad story about parasitics; these are some of my recent ones.  The parasitic capacitances of MOSFET and bipolar transistors can change quite significantly depending on their operating conditions, and these are unfortunately not always well modeled.
+					<br /><br />
+					This example MOSFET device here, shows the gate drain, which is of course the Miller, and the gate source, drain-source capacitances, are all strongly dependent on the drain-source voltage that is applied.
+					<br /><br />
+					Also bondwire inductances and bondpad capacitances can introduce resonant peaks at quite high frequencies; this seemingly simple emitter-follower based circuit has caused me some grief with high frequency oscillations in a recent past. To be able to simulate it, not only the parasitic capacitances had to be added, but also some transient disturbances in the system.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 78 –Still Oscillates – where to start</div>
+					Despite following all the theory and advice your circuit oscillates, where should you start troubleshooting?  My advice is that first disconnect all secondary loops if you can, without affecting the operation.
+					<br /><br />
+					The oscillation frequency can give you some significant clues; if it is close to your unity gain bandwidth, you can consider parasitics, maybe a feed-forward right half- plane zero or some loss of the Miller loop gain.
+					<br /><br />
+					If it is at a much lower frequency, maybe it's a large signal or conditional stability, an overdriven gain stage; it could be a saturated bipolar device or some significant loss of the Miller loop gain, such as we looked at for a cascode transistor.
+					<br /><br />
+					If it is at a higher frequency than your unity gain bandwidth, I would suspect parasitic inductances, negative impedance, unintended positive feedback, or some of the local feedback loops.
+					<br /><br />
+					I hope that you find some of these examples useful as you're looking for problems.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 79 –Papers to see at ISSCC 2021 </div>
+					These are some of the papers at this year's ISSCC conference that you might want to consider attending if this topic interests you.
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 80 –References</div>
+					And I'm also listing some references to read up further.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 81 –References</div>
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 82 –End</div>
+					Thank you for your attention; I hope that you found the material useful and applicable to your work.  I would like to hear from you during the question and answer session.
+					<br /><br />
+					I also would like to acknowledge and thank Steve Brantley and Vadim Ivanov, not only for their teaching and mentoring over the years, but also for allowing me to build some of this presentation on their previous work.
+
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 83 –Examples of impedance control</div>
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 84 –Examples to improve load capacitance drive</div>
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide 85 –2-Stage Amplifier; Stable with any Cld</div>
+
+					<br /><br />
+					<div style="font-weight: bold; text-decoration: underline; font-size: 30px; margin-top: 15px; ">Q & A</div>
+					<br /><br />
+
+
+					We are going to start on tutorial T9; my name is David Lau from the University of Michigan; could we have the summary slides?
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide – Introduction – Viola Schaffer</div>
+					So the name of the tutorial is designing amplifiers for stability and our tutorial presenter today is Viola Schaffer, and Viola received her M.Sc. from Electrical Engineering and Computer Science from the University of Arizona in 1999.
+					<br /><br />
+					She has since worked as a designer, and then as a manager at Texas Instruments; she's an expert in the area of precision amplifiers and signal conditioning circuits, and has extensively published in these fields, and she's also a member of the ESSCIRC and ISSCC program committees, so we are privileged to have Viola speak to us.
+					<br /><br />
+					A quick summary of her tutorial, and then we'll have some questions and answers; if you have questions that come up during the summary, please type them into the chat and we will address them as we go to the question and answer section; so Viola.
+					<br /><br />
+					Yes, thank you for the introduction, please go to the next slide.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide – Benefits and Challenges</div>
+					Yeah, so why do I think it's beneficial to revisit this very, very, established field of compensation and stability?  In case of amplifiers, there are thousands of commercially available operational amplifiers and even more versions inside of mixed-signal ICs, and this large variety is due to that there are so many different optimization objectives, and to optimize for a particular performance, you have to trade-off conflicting requirements.
+					<br /><br />
+					One thing that is common to all of these amplifiers, is that they must be robust in a variety of operating conditions and feedback variations, and unfortunately poor compensation can many times lead to a system failure, but even in best case, it will lead to wasted power and area, and if you really want to take your circuits to the next level of the state-of-the art, it's not enough just to trade them off, you really need to optimize and this is where visiting the basics of compensation can help you see.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide – Types of compensation</div>
+					If you would go to the next slide, yeah; during the tutorial, I talked about the different types of compensation, the basics are of course load compensation, shunt, parallel, or lead compensation; the classic of Miller compensation and feed-forward compensation, and I showed how this could be applied to some of the basic architectures, and how you can combine some of these to achieve even better performance.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide – Tips to design for stability</div>
+					If you could go to the next slide; so there are a couple of tips that I passed along that could be useful when you're designing for stability; one of them is it's a really basic one.
+					<br /><br />
+					Limit the number of gain stages to the number that you truly need; each additional gain stage decreases your available bandwidth, or cost you additional power. It's good to consider gain or impedance boosting, or one of the classics of nested gain structures; those can be very powerful.
+					<br /><br />
+					Anytime you have three or more stages, it can lead to conditional stability; meaning that in some kind of condition of transient conditions, such as start-up or slewing, the circuit can become unstable, so you really need to watch out for this.
+					<br /><br />
+					As you're designing amplifiers, it's likely that you don't, sorry you could stay on this one; go back to number 5 for a second, thank you.  So other things you could consider is gain reduction; sometimes if you have multiple stages that could be powerful, you can consider isolating for loading effects, especially as you are debugging your circuits, and it can be very useful to pass high impedance nodes to see how the internal circuit reacts to them, and I've warned a couple of times, to watch for transient states such as startup, or if something saturates in a bipolar amplifier, or as your amplifier enters current limit yeah.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide – Common conditions to watch for</div>
+					Please go to the next slide now; yeah, some of the things can really get you; those are the output stage operating conditions, of course voltage levels, whether it's syncing or sourcing current; as you're getting close to triode or sometimes when the gate-to-source capacitance changes.
+					<br /><br />
+					And it is very important to look at your class-AB circuit as it can introduce non symmetrical delays, so your circuit will behave a little bit differently depending on the conditions on the output, startup conditions, loading effects, because they are very often voltage or current dependent, and by loading effects, I mean the impedance as a subsequent circuit creates on your preceding stage parasitic capacitances, such as the gate-to-source capacitance, collector-based capacitance that can be voltage dependent, and of course as most of our circuits have to be eventually packaged somehow, wire-bond inductances can cause non-stability as well.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide – Still Oscillates – where to start</div>
+					So if you would go to the next slide; what happened if we apply all of our great techniques and the circuit still oscillates?  I combined a couple of tips which can help; the first thing I would recommend is to disconnect any unnecessary loops in your circuit to make sure that you are really focusing on the basics.
+					<br /><br />
+					And then it's very helpful to take a look at the oscillation frequency, if it happens to be very close to your unity gain bandwidth, I would start suspecting parasitics, maybe a feed-forward right half-plane zero, or a little  bit of a loss of gain in a Miller loop.
+					<br /><br />
+					If it is a much lower frequency, if you're a bipolar designer, I right away would suspect something saturated.  If you are working in CMOS, it could be an overdriven gain stage, maybe conditional stability, or very significant loss of Miller loop gain; for example, I mentioned in the presentation; a cascode transistor can run out of current completely during slewing.
+					<br /><br />
+					If the oscillation is at a high frequency, many times its parasitic inductances or some negative impedance in your circuit that that can cause this, maybe an unintended positive feedback or one of the local feedback loops that are faster could be causing this.
+					<br /><br />
+					So that is the summary, and I'm looking forward to some of the questions.
+					<br /><br />
+					Thank you, Viola and appreciate your summary; we do have several questions that were posed in the last few days, and so if you have additional questions, please put them in the chat and I'll kind of go through them.
+					<br /><br />
+					The first question is a question where it stated that for switch capacitor circuits, there seems to be a trend towards more dynamic type of amplifiers, so ring amplifiers, floating inverter amplifiers, and these amplifiers are not easily characterized by a bode plot, so how would you ensure stability in such applications?
+					<br /><br />
+					Yeah, this is a very interesting question and I must admit, these type of circuits, I have not worked myself with, but of course you know, I'm somewhat familiar with them, so I will try to at least describe how I would approach the topic.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide – Bode Plots: LHP vs RHP Pole and Zero</div>
+					So I think it's very well posed that you know, body plots or for any circuit whether it's a more traditional amplifier, it is only valid at a particular operating point.  It is a linearization technique, so you know the biggest challenge for ring amplifiers is that this operating point, that is valid for the stability, it's a very narrow range, so theoretically you know, the similar kind of techniques are still applicable.
+					<br /><br />
+					So the circuits still have to be stabilized; it still has to have one dominant pole and other ports significantly further out, but finding a stable operating point is difficult and for that one, I think there are a couple of techniques of  introducing some dead bands into the stages has been proposed.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide – Relating to Transient Response</div>
+					The way I would approach it is of course always using transient step responses can help you sort of get you to at least zeroed in, then I would consider using the principle of superposition.
+					<br /><br />
+					So first go by designing your feedback network with them, you know, some kind of model and approach it from that angle; so basically box the amplifier first design to understand what kind of feedback network you really need, apply some dead bands, make sure that things are stable in the transient, and then I would consider if either AC simulation or PAC simulation, can be applied to finalize the design.
+					<br /><br />
+					Great, thank you; another question is what is the benefit of using feed-forward compensation, particularly in comparison for instance, to like Miller compensation?  So what are some of the advantages I guess?
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide – Feed-forward Compensation</div>
+					Feed-forward compensation can combine, oh in this case okay sorry. Feed-forward compensation is, I've seen it primarily used in bipolar amplifiers, and in this case, you really need a three-stage architecture because you need a stage that can drive the base-current for the output stage.
+					<br /><br />
+					So in this case, this intermediate stage is really a current driver, not necessarily a very high gain stage and for power efficiency, feed forward compensation can be applied quite extensively.  These stages are typically non-inverting stages, so you can bypass them for high frequencies.
+					<br /><br />
+					Thank you; we have a question, where the question is that I have found that phase-margin within a Miller-loop is a common point of discussion during design reviews, can you elaborate why you consider a phase-margin of 30° over PVT to be acceptable, and it's referring to slide 74.  And I think the question is kind of like why 30°?  Is that a magic number? And why do people kind of point to that as like the sufficient amount?
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide – Miller-Loop damping</div>
+					Yeah, I know, it's a very good question and I don't think it has a perfect answer, but I will give my side to it.
+					<br /><br />
+					So in all of our design reviews, it does get discussed as well, what is the right amount of stability? And I think it also depends very greatly on the application you're designing for; in some cases. It is way too low, in some cases you can go a little bit more aggressive to get the best speed, and maybe that is possible.
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide – Large signal instability</div>
+					30° or the  30 to 40°; we picked this because this is where, well let's put it this way; I really approach it from looking at what is the cost and benefit for pushing it further? So at one point, adding more, getting more for just to cover some of the some of the cases, would require much more power.
+					<br /><br />
+					I think I would encourage someone to take a look at the frequency response; is it a single pole?  How stable is this pole that is causing the degradation of the phase margin? So I don't think there is anything magical about the 30°phase-margin, but it's from experience, anything pushing beyond this will require either much more time, or much more power, much more capacitance, and that's why people settle for this to be acceptable in certain cases.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide – Large signal instability</div>
+					Great, thank you Viola; we have another question, also actually about slide 75, and the question is how do you simulate and ensure the large signal stability? I'm not sure that's applicable to this slide, but I think it's a good question, so the question is really about large-scale signal stability and how can we make sure that we are stable in that regime?
+					<br /><br />
+					Yeah, this is a very good one, the two techniques that I trust most is for one transient simulation, so I think in many cases, we have something which we call our torture bench, and that's really coming up with all of the main things that someone can do to our amplifier, and then run through those cases, and in a transient simulation if it's possible, from the computing power, and the survey the different kind of load conditions that the things are stable.
+					<br /><br />
+					So, that would be one way to approach it; the other thing that I find very powerful and that was taught to me at the very beginning of my career, is passing nodes, so really identifying high impedance nodes within a circuit and adding a current pulse to them, and seeing how it propagates through the system, if something's going to go unstable you know with a current spike into those nodes, you typically can tell. So those are the two things that we apply most.
+					<br /><br />
+					Yeah, that's actually I think your last suggestion is a really good one, and especially I think right, for high impedance nodes, they are susceptible so that's a very, very, good suggestion.
+					<br /><br />
+					We have one more question, and the question is sort of similar; so under what conditions is the Nyquist stability criterion more accurate than the bode plot based stability analysis?
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide – A practical simplification</div>
+					Oh, that's a very good question, I mean I think certain concepts, such as the gain margin and the phase margin, is inflicted by both. So in this case, both in the Nyquist criterion and on the bode plots, eventually you try to make sure that by the time you're closing the feedback. Your signal, your loop gain is small enough that your circuit, by the time it inverts 180°, is small enough that you cannot turn a negative feedback to positive feedback.
+					<br /><br />
+					So I think those concepts say the same, Nyquist criteria talks a little bit more or more in depth about fundamental stability, and bode plots are very useful in examining the way the direct or how do you get to in frequency domain?
+					<br /><br />
+					So you can read it off either from Nyquist plots; it's more difficult to read off how your amplifier behaves at particular frequencies and Nyquist plots are very helpful to determine if your system can fundamentally go unstable and what those conditions might be.
+					<br /><br />
+					Well great; I think that's our questions and oh, we have another question that came in and it says, thank you for the nice tutorial, and related to the slide 75, about large signal instability, could you provide further roots of the issue?
+					<br /><br />
+					Yeah the cases where I’ve experienced most of it is, is really when you’re starting up your circuit, it's very likely that some of your currents might not be the right value, yet, so the proper gains of different stages are not there yet, so that is one place where you would run into some of the large signal stability.
+					<br /><br />
+					Of course another one is during slewing, when you're slewing you can lose current in particular critical transistors in your gain structure, so that would be another one, or in the case of feed-forward stage, like the one you're just showing in a slide; the feed-forward stage can be overdriven by gate too, so you actually can lose the full gain of the feed-forward stage, and that is one of the things that can lead to instability of an otherwise perfectly stable circuit.
+
+
+					<br /><br />
+					<div style="font-weight: bold; margin-top: 15px;">Slide – Beware of Parasitic Effects</div>
+					Yes, well thank you Viola; I think those are the questions and thank you for a very comprehensive discussion on this topic which is actually a topic that really is very fundamental to everything we do in analog design, so we appreciate it.
+					<br /><br />
+					We have time, we have a short break of a couple minutes; the author is also available for further discussion in the author interview section of the conference and in a couple minutes, we'll start with Tutorial 10, so and with that I hand it back to the moderator.
+
+					<div>&nbsp;</div>
+
+				</div>
+				</div>
+		</div>
+
+	</div>
+</body>
+</html>
